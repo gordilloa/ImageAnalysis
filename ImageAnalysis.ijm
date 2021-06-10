@@ -27,6 +27,9 @@ else {
 
 	//this checks either what number value to threshold at or what algorithm to use depending on if the user wants to do autothresholding or not
 	if(!autoT){
+		if(isBrightField){
+					upperThresh = getNumber("What is the upper bound of the threshold value", 100);	
+		}
 		threshold = getNumber("What threshold value to use?", 255);}
 	else{
 		gThreshAlgo = getString("what method? Default, Huang, Intermodes, Mean, IsoData...etc ", "Huang");		
@@ -57,22 +60,15 @@ macro "ImageAnalysis"{
 		if (!File.isDirectory(current_imagePath)){		
 			// open the image and split	
 			open(current_imagePath);	
-				
-			//done so that any abnormalities can hopefully be cropped out	
-			//run("Subtract Background...", "rolling=15 sliding");
-			run("Auto Crop");	
-				
+
+
+			preThresholdingProcessing();
+			
 			//check if local or global thresholding is happening to call the appropriate function	
 			if(protocol){	
 				local_threshold();
 			}	
 			else {
-	
-				//checks if is brightfield and if the thresholding parameter is not auto, then it asks the user for the lower bound value
-				if(isBrightField && !autoT){
-					upperThresh = getNumber("What is the upper bound of the threshold value", 100);	
-				}
-	
 				global_threshod();
 			}	
 				
@@ -94,6 +90,18 @@ macro "ImageAnalysis"{
 	}
 	printParameters();
 
+}
+
+
+function preThresholdingProcessing(){
+	/*
+	 * Prethreshold image processing for images should be done here
+	 */	
+	 
+	//done so that any abnormalities can hopefully be cropped out	
+	//run("Subtract Background...", "rolling=15 sliding");
+	run("Auto Crop");	
+				
 }
 
 /* This function runs the user selected thresholding method using global thesholding parameters
