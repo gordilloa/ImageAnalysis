@@ -12,7 +12,19 @@ If more need to be added or some need to be commented out, simply add or comment
 /*
  * Prethreshold image processing for images should be done here
  */	
-			 
+function preThresholdingProcessing(){
+...
+}
 ```
 To comment out a piece of code, add "//" to the beginning of the line.
 If you need to add a command to the image preprossessing pipeline, use the recorder macro to figure out the specifics of the command you wish to add.
+***************
+Next review the constant variables, these should only be changed if you want to change the basic protocol for determining slice area.
+***************
+Run the script. A folder selection window will pop up and this will be where you choose the folder that contains your 8bit tiff images. There should not be any subfolders within this folder.
+***************
+Run through the prompts. Note: when typing in algorithms, they must be written exactly as the name is. If there is a capital letter in the middle, then it must be
+written as such.
+***************
+Once all the parameters are set, the images will begin being thresholded and analyzed. There will be two output windows, 1 will be of the particle analysis summary and the other will be of the slice area. 
+At the end, a summary of protocols and parameters used will be printed. 
