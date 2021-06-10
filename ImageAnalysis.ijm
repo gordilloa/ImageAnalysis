@@ -4,6 +4,20 @@
  * 
  */
 
+/*
+ * Constant variables will be here, if you need to change any of the major variables, do so here and their value will be reflected throughout.
+ */
+
+ //BRIGHTFIELD slice area parameters
+FINAL_ISBRIGHTFIELD_TOTALSLICEAREA_LOWERBOUND = 1;
+FINAL_ISBRIGHTFIELD_TOTALSLICEAREA_UPPERBOUND = 85;
+
+//nonbrightfield slice area parameters
+FINAL_NOTBRIGHTFIELD_TOTALSLICEAREA_THRESHOLD_ALGO = "Li";
+
+
+//Sets the measurements to make sure they are already there regardless of the user's initial preferences. Can be changed depending on what data you need.
+run("Set Measurements...", "area min area_fraction limit display redirect=None decimal=3");
 
 // ask user to select a folder			
 dir = getDirectory("Select A folder"); 			
@@ -14,14 +28,17 @@ fileList = getFileList(dir);
 			
 //asking user what protocol they want to do, in this method, local is "yes" and global is "no" thus, if local, protocol = 1			
 protocol = getBoolean("Are you doing local thresholding or global thresholding", "local", "global");			
+protocolString = "";
 			
 //if protocol is true, that means user wants to do local thresholding so ask them what algorithm to use, if global is desired, then requesting the threshold value			
-if(protocol){		
+if(protocol){
+	protocolString = "local thresholding";	
 	//local threshold variables	
  	l_threshold = getString("Which local threshold parameter do you want: Bernsen, Contrast, Mean, Median, MidGrey, Niblack, Otsu, Phansalkar, Sauvola ", "default");
  	radius = getNumber("What radius would you like to use? default is 15.", 15);
 }			
-else {			
+else {	
+	protocolString = "global thresholding";			
 	//global threshold variables
 	autoT = getBoolean("are you doing auto threshold or single value threshold?", "auto", "single value");
 
@@ -166,10 +183,10 @@ function particleArea() {
  
 function sliceArea(){			
 	if(isBrightField){		
-		setThreshold(1, 85);	
+		setThreshold(FINAL_ISBRIGHTFIELD_TOTALSLICEAREA_LOWERBOUND, FINAL_ISBRIGHTFIELD_TOTALSLICEAREA_UPPERBOUND);	
 	}		
 	else{		
-		run("Auto Threshold", "method=Li white");	
+		run("Auto Threshold", "method=["+FINAL_NOTBRIGHTFIELD_TOTALSLICEAREA_THRESHOLD_ALGO+"] white");	
 	}		
 	run("Measure");		
 }			
@@ -180,6 +197,7 @@ function sliceArea(){
  */
 
 function printParameters(){
+	print(protocolString)
 	if(protocol){		
 	 	print("Local threshold method: "+l_threshold);
 	 	print("Radius: " + toString(radius));
@@ -194,10 +212,10 @@ function printParameters(){
 		}			
 	print("Particle size =["+sizeMin+"]-["+sizeMax+"] circularity=["+circMin+"]-["+circMax+"]");
 	if(isBrightField){		
-		print("Brightfield slides, slice threshold method: setThreshold(1, 85)");	
+		print("Brightfield slides, slice threshold method: setThreshold(["+FINAL_ISBRIGHTFIELD_TOTALSLICEAREA_LOWERBOUND+"], ["+FINAL_ISBRIGHTFIELD_TOTALSLICEAREA_UPPERBOUND+"])");	
 		}		
 	else{		
-		print("Non brightfield slides, slice threshold method: Auto Threshold, method=Li white");	
+		print("Non brightfield slides, slice threshold method: Auto Threshold, method=["+FINAL_NOTBRIGHTFIELD_TOTALSLICEAREA_THRESHOLD_ALGO+"] white");	
 		}		
 }			
 
