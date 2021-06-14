@@ -197,7 +197,7 @@ function sliceArea(){
  */
 
 function printParameters(){
-	print(protocolString)
+	print(protocolString);
 	if(protocol){		
 	 	print("Local threshold method: "+l_threshold);
 	 	print("Radius: " + toString(radius));
